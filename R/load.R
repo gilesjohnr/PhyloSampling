@@ -1,2 +1,5 @@
 library(lattice)
 library(plot3D)
+library(plotly)
+library(ggplot2)
+library(metR)

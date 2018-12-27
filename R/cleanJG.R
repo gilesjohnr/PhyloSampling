@@ -147,8 +147,8 @@ Pr.TL2(N=100000, phi=0.4,  rho=0.99)
 Pr.TL2(N=100000, phi=0.2,  rho=0.99)
 
 # Explore more 
-rho.vals <- seq(0, 0.99, length.out=50)
-phi.vals <- seq(0, 0.99, length.out=50)
+rho.vals <- seq(0, 0.99, length.out=100)
+phi.vals <- seq(0, 0.99, length.out=100)
   #seq(1000, 1e+10, length.out=50)
 
 m <- mesh(rho.vals, phi.vals)
@@ -232,3 +232,44 @@ for (i in seq_along(rho.vals)) {
 }
 
 contour(x=rho.vals, y=phi.vals, z=m, main='N = 100000', xlab='rho', ylab='phi')
+
+
+# Plotly library
+library(plotly)
+
+
+plot_ly(x=rho.vals, y=phi.vals, z=m, type = "surface") %>%
+  layout(
+    title = "N=1000",
+    scene = list(
+      xaxis = list(title = "rho"),
+      yaxis = list(title = "phi"),
+      zaxis = list(title = "Pr")
+    ))
+  
+### ggplot heatmap + contour
+g <- expand.grid(rho.vals, phi.vals)
+names(g) <- c('rho', 'phi')
+g$Pr <- Pr.TL2(N=1000, rho=g$rho, phi=g$phi)
+
+p <- ggplot(g, aes(x=phi, y=rho, z=Pr))
+  
+p + stat_contour()
+
+p + geom_raster(aes(fill = Pr), hjust=0.5, vjust=0.5, interpolate=FALSE) + 
+  scale_fill_gradient(low="blue", high="green", name='Pr(A=A*|L(A,B))') +
+  geom_contour(aes(z = Pr), color='black', size=0.5) +
+  geom_text_contour(aes(z = Pr), nudge_y=0.0175) +
+  theme_bw() +
+  ylab(expression(rho)) + 
+  xlab(expression(phi^'+')) + 
+  theme(axis.text=element_text(size=12),
+        axis.title.x=element_text(size=15),
+        axis.title.y=element_text(size=15),
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank())
+
+
