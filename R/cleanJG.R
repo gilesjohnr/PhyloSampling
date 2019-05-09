@@ -141,10 +141,10 @@ Pr.TL2(N=11, rho=0.8, phi=1)
 Pr.TL2(N=11, rho=0.4, phi=1)
 Pr.TL2(N=11, rho=0.2, phi=1)
 
-Pr.TL2(N=100000, phi=0.99, rho=0.99)
-Pr.TL2(N=100000, phi=0.8,  rho=0.99)
-Pr.TL2(N=100000, phi=0.4,  rho=0.99)
-Pr.TL2(N=100000, phi=0.2,  rho=0.99)
+Pr.TL2(N=1000, phi=0.99, rho=0.99)
+Pr.TL2(N=1000, phi=0.8,  rho=0.99)
+Pr.TL2(N=1000, phi=0.4,  rho=0.99)
+Pr.TL2(N=1000, phi=0.2,  rho=0.99)
 
 # Explore more 
 rho.vals <- seq(0, 0.99, length.out=100)
@@ -271,5 +271,118 @@ p + geom_raster(aes(fill = Pr), hjust=0.5, vjust=0.5, interpolate=FALSE) +
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank())
+
+#########################################################################
+# Checking Expected # true pairs
+
+tp <- function(N, rho=1) (rho/2) * N
+tp(2, 1)
+
+tp2 <- function(N, rho=1) {
+  ( ((N*(N - 1)) /2) ) * ( rho * (((rho*N) - 1) / (N - 1)) )
+}
+tp2(N=2, rho=1)
+
+tp(10, 1)
+tp2(10, 1)
+
+N <- 100
+M <- 0:100
+k <- 5
+
+rho <- M/N
+tau <- k/N
+
+#x <- (tau)# * ((1-tau)
+
+#plot(x*5, type='l', ylim=c(0,1))
+1 - (tau * (1 - tau)^(M-k))*5
+
+choose(M, 1) * (tau* (1 - tau)^(M-1))
+
+(tau) * (1 - (rho*tau))
+dbinom(1, M, tau)
+plot(1 - pbinom(0.5, M, tau), 
+     type='l', ylim=c(0,1))
+
+lines((M/N)^2, type='l', ylim=c(0,1))
+
+#################################################################################
+
+f1 <- function(chi, M=100) (1 - chi^(M-1))*(1-chi)
+f2 <- function(chi, M=100) ((1 - chi)^(M-1))*(1-chi)
+f3 <- function(chi, M=100) ((1 - (1 - chi))^(M-1))*(1-chi)
+f4 <- function(chi, M=100) (chi^(M-1))*(1-chi)
+
+plot(f1(seq(0,1,length.out=100)), lwd=2, type='l', xlab='chi', xaxt='n', ylab='Value of term')
+lines(f2(seq(0,1,length.out=100)), lwd=2, col='blue')
+lines(f3(seq(0,1,length.out=100)), lwd=2, col='red')
+lines(f4(seq(0,1,length.out=100)), lwd=2, col='purple')
+axis(1,seq(0, 100, 20), seq(0, 1, 0.2))
+
+p1 <- function(chi, M=1000, rho=1) rho/(rho + ((1 - chi^(M-1))*(1-chi))*(1-rho))
+p2 <- function(chi, M=1000, rho=1) rho/(rho + (((1 - chi)^(M-1))*(1-chi))*(1-rho))
+p3 <- function(chi, M=1000, rho=1) rho/(rho + ( ( ((1 - (1 - chi))^(M-1)) * (1-chi) ) * (1-rho) ))
+p4 <- function(chi, M=1000, rho=1) rho/(rho + ((chi^(M-1))*(1-chi))*(1-rho))
+
+plot(p1(seq(0,1,length.out=100)), lwd=2, type='l', ylim=c(0,1), xlab='chi', xaxt='n', ylab='Value of term')
+lines(p2(seq(0,1,length.out=100)), lwd=2, col='blue')
+lines(p3(seq(0,1,length.out=100)), lwd=2, col='red')
+lines(p4(seq(0,1,length.out=100)), lwd=2, col='purple')
+axis(1,seq(0, 100, 20), seq(0, 1, 0.2))
+abline(h=1, col='green', lty=2, lwd=2)
+
+plot(p1(seq(0,1,length.out=100), rho=0.5), lwd=2, type='l', ylim=c(0,1), xlab='chi', xaxt='n', ylab='Pr(y|z)')
+lines(p2(seq(0,1,length.out=100), rho=0.5), lwd=2, col='blue')
+lines(p3(seq(0,1,length.out=100), rho=0.5), lwd=2, col='red')
+lines(p4(seq(0,1,length.out=100), rho=0.5), lwd=2, col='purple')
+axis(1,seq(0, 100, 20), seq(0, 1, 0.2))
+abline(h=0.5, col='green', lty=2, lwd=2)
+
+plot(p1(seq(0,1,length.out=100), rho=0.25), lwd=2, type='l', ylim=c(0,1), xlab='chi', xaxt='n', ylab='Pr(y|z)')
+lines(p2(seq(0,1,length.out=100), rho=0.25), lwd=2, col='blue')
+lines(p3(seq(0,1,length.out=100), rho=0.25), lwd=2, col='red')
+lines(p4(seq(0,1,length.out=100), rho=0.25), lwd=2, col='purple')
+axis(1,seq(0, 100, 20), seq(0, 1, 0.2))
+abline(h=0.25, col='green', lty=2, lwd=2)
+
+p1(1, rho=1)
+p2(1, rho=1)
+p3(1, rho=1)
+p4(1, rho=1)
+
+p1(1, rho=0.5)
+p2(1, rho=0.5)
+p3(1, rho=0.5)
+p4(1, rho=0.5)
+
+#################################################################################
+# Probability of y given z using Poisson distributed k
+
+Pr.yz <- function(N,         # final outbreak size
+                  rho,       # sampling proportion 
+                  eta,       # in sample sensitivity
+                  chi,        # specificity of linkage criteria
+                  lambda      # Average k per case i
+){
+  
+  cons1 <- N > 0
+  cons2 <- rho >= 0 & rho <= 1
+  cons3 <- eta >= 0 & eta <= 1
+  cons4 <- chi >= 0 & chi <= 1
+  M <- N * rho
+  
+  if (all(cons1, cons2, cons3, cons4)) {
+    
+    num <- 1 - exp(-(rho*lambda*eta))
+    den <- (1 - chi^(N-1)) * (exp((1/chi) * ((1-chi)*rho*lambda - rho*lambda*eta)))
+    out <- num/den
+  } else {
+    out <- NA
+  }
+  return(out)
+}
+
+Pr.yz(N=100, rho=0.05, eta=0.9, chi=0.9, lambda=1)
 
 

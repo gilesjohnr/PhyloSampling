@@ -55,3 +55,17 @@ p + geom_raster(aes(fill = Pr), hjust=0.5, vjust=0.5, interpolate=FALSE) +
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank())
+
+#########################################################################
+Pr.yz(N=100, rho=0.05, eta=0.9, chi=0.9, lambda=1)
+
+rho.vals <- seq(0.01, 0.99, length.out=50)
+N.vals <- seq(100, 1e+05, length.out=50)
+
+g <- expand.grid(rho.vals, N.vals)
+names(g) <- c('rho', 'N')
+g$Pr <- Pr.yz(N=g$N.vals, rho=g$rho.vals, eta=0.9, chi=0.9, lambda=1)
+
+p <- ggplot(g, aes(x=phi, y=rho, z=Pr))
+
+p + stat_contour()
