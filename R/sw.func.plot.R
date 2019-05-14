@@ -6,14 +6,15 @@
 # using the phylosampling function specified
 # and fixed sensititvity and specficity
 
-plt.eq <- function(chi=0.95,            # number: specificity of the linkage criteria
-                   eta=0.95,            # number: sensitivity of the linkage criteria
+plt.eq <- function(chi,            # number: specificity of the linkage criteria
+                   eta,            # number: sensitivity of the linkage criteria
                    rho,                 # vector: values of rho to evaluate
                    M,                   # vector: values of M to evaluate
                    x="rho",             # string: which variable to put on the x axis
                    eq,                  # string: phylosampling function to evaluate
                    lbls=c("",""),       # labels for plot as: c("xlab","ylab")
-                   inverse=FALSE        # TRUE to plot 1 minus result of equation
+                   inverse=FALSE,       # TRUE to plot 1 minus result of equation
+                   legend=TRUE          # TRUE to show legend to the right of the plot
 ){
   
   # set up the dataframe to be used in plotting
@@ -26,10 +27,10 @@ plt.eq <- function(chi=0.95,            # number: specificity of the linkage cri
     for (i in seq(1,length(M))){
       cname <- paste("M=",M[i],sep="") # set name for column to be added
       if (inverse == FALSE){
-        g <- cbind(g, eq(chi, g$x, M[i]))
+        g <- cbind(g, eq(chi, g$x, M[i], eta))
       }
       else {
-        g <- cbind(g, 1-eq(chi, g$x, M[i]))
+        g <- cbind(g, 1-eq(chi, g$x, M[i], eta))
       }
       colnames(g)[length(colnames(g))] <- cname
     }
@@ -44,10 +45,10 @@ plt.eq <- function(chi=0.95,            # number: specificity of the linkage cri
     for (i in seq(1,length(rho))){
       cname <- paste("rho=",rho[i],sep="") # set name for column to be added
       if (inverse == FALSE){
-        g <- cbind(g, eq(chi, rho[i], g$x))
+        g <- cbind(g, eq(chi, rho[i], g$x, eta))
       }
       else {
-        g <- cbind(g, 1-eq(chi, rho[i], g$x))
+        g <- cbind(g, 1-eq(chi, rho[i], g$x, eta))
       }
       colnames(g)[length(colnames(g))] <- cname
     }
@@ -62,7 +63,7 @@ plt.eq <- function(chi=0.95,            # number: specificity of the linkage cri
   
   melted.g <- melt(g, id = 'x')
   ggplot(melted.g, aes(x = x, y = value, colour = variable)) +
-    geom_line() +
+    geom_line(show.legend = legend) +
     xlab(lbls[1]) +
     ylab(lbls[2])
 }

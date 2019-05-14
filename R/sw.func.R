@@ -8,7 +8,8 @@
 
 Pr.A1 <- function(chi,    # specificity of the linkage criteria
                   rho,    # sampling proportion
-                  M       # number of cases sampled
+                  M,      # number of cases sampled
+                  eta=1   # perfect sensitivity
 ){
   conx1 <- chi >= 0 & chi <= 1
   conx2 <- rho >=0 & rho <=1
@@ -27,7 +28,8 @@ Pr.A1 <- function(chi,    # specificity of the linkage criteria
 
 EO.A1 <- function(chi,    # specificity of the linkage criteria
                   rho,    # sampling proportion
-                  M       # number of cases sampled
+                  M,      # number of cases sampled
+                  eta=1   # perfect sensitivity
 ){
   conx1 <- chi >= 0 & chi <= 1
   conx2 <- rho >=0 & rho <=1
