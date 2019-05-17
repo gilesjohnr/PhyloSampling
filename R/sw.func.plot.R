@@ -68,3 +68,27 @@ plt.eq <- function(chi,                 # number: specificity of the linkage cri
     xlab(lbls[1]) +
     ylab(lbls[2])
 }
+
+###############################################################################
+
+# A function producing a heatmap of the false discovery rate
+# for different values of sensititvity and specficity
+
+plt.heatmap <- function(chi,            # vector: specificity of the linkage criteria
+                        eta,            # vector: sensitivity of the linkage criteria
+                        R=0,            # number: effective reproductive number
+                        rho,            # number: sampling proportion
+                        M,              # number: sample size
+                        eq              # string: phylosampling function to evaluate
+){
+  
+  g <- expand.grid(chi,eta)
+  names(g) <- c('chi','eta')
+  
+  g <- cbind(g, 1-eq(chi = g$chi, eta = g$eta, rho = rho, M = M, R = R))
+  colnames(g)[length(colnames(g))] <- "FDR"
+  
+  levelplot(FDR ~ chi*eta, data = g,
+            col.regions = sequential_hcl(100)[length(sequential_hcl(100)):1])
+}
+

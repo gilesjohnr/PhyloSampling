@@ -3,6 +3,8 @@
 library(ggplot2)
 library(reshape2)
 library(gridExtra)
+library(lattice)
+library(colorspace)
 
 ###############################################################################
 
@@ -59,8 +61,8 @@ grid.arrange(p1,p2,p3,p4,nrow=2, top=grid.title)
 # assumptions: single linkage, single transmission
 # assumptions: fixed values of specificity and sensitivity
 
-chi <- 0.99 # specificity of the linkage criteria
-eta <- 0.85 # sensitivity of the linkage criteria
+chi <- 0.85 # specificity of the linkage criteria
+eta <- 0.9 # sensitivity of the linkage criteria
 
 p1 <- plt.eq(chi = chi,
              eta = eta,
@@ -102,14 +104,14 @@ grid.arrange(p1,p2,p3,p4,nrow=2, top=grid.title)
 
 ###############################################################################
 
-# A4
+# A3
 # Make four plots showing relationship between M, rho, false discovery rate, and expected number of links
 # assumptions: single linkage
 # assumptions: fixed values of specificity and sensitivity
 
-chi <- 0.99 # specificity of the linkage criteria
-eta <- 0.85 # sensitivity of the linkage criteria
-R <- 5 # effective reproductive number
+chi <- 0.85 # specificity of the linkage criteria
+eta <- 0.9 # sensitivity of the linkage criteria
+R <- 1 # effective reproductive number
 
 p1 <- plt.eq(chi = chi,
              eta = eta,
@@ -151,3 +153,13 @@ p4 <- plt.eq(chi = chi,
 
 grid.title <- paste("specificity = ",chi," , sensitivity = ", eta, " , R = ", R, sep = "")
 grid.arrange(p1,p2,p3,p4,nrow=2, top=grid.title)
+
+
+###############################################################################
+
+# Heatmap
+# Make heatmap showing effect of changing sensitivity and specificity
+chi <- seq(0.9,1,length.out = 100)
+eta <- seq(0,1,length.out = 100)
+
+plt.heatmap(chi,eta,rho=0.8,M=200,eq=Pr.A3,R=3)

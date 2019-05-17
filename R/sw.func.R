@@ -112,7 +112,7 @@ Pr.A3 <- function(chi,    # specificity of the linkage criteria
   
   if (all(conx1, conx2, conx3, conx4, conx5)){
     pr <- (1 - exp(-rho * eta * (R+1))) / 
-      (1 - ((chi^(M-1)) * exp(rho * (R+1) * ((1-eta)/chi - 1))))
+      (1 - ((chi^(M-2)) * exp(rho * (R+1) * ((1-eta)/chi - 1))))
   } else {
     pr <- NA
   }
@@ -135,7 +135,7 @@ EO.A3 <- function(chi,    # specificity of the linkage criteria
   conx5 <- R >=0
   
   if (all(conx1, conx2, conx3, conx4, conx5)){
-    pair <- (M * rho * (R+1) * eta * (1 - ((chi^(M-1))) * exp(rho * (R+1) * ((1-eta)/chi -1)))) / 
+    pair <- (M * rho * (R+1) * eta * (1 - ((chi^(M-2))) * exp(rho * (R+1) * ((1-eta)/chi -1)))) / 
       (2 * (1 - exp(-rho * (R+1) * eta)))
   } else {
     pair <- NA
